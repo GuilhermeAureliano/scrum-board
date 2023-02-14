@@ -1,5 +1,6 @@
 package com.dev.scrumboard.services;
 
+import com.dev.scrumboard.dtos.UserEditDTO;
 import com.dev.scrumboard.exceptions.ApiException;
 import com.dev.scrumboard.models.User;
 import com.dev.scrumboard.repositories.UserRepository;
@@ -20,22 +21,48 @@ public class UserServiceImpl implements UserService{
     @Override
     public User create(User user) throws ApiException {
 
-        Optional<User> userExist = this.userRepository.findByUserName(user.getUserName());
-        if (userExist.isPresent()) {
-            throw UserError.erroUserAlreadyExist();
-        }
-
-        userExist = this.userRepository.findByEmail(user.getEmail());
-        if (userExist.isPresent()) {
-            throw UserError.erroUserAlreadyExist();
-        }
+        this.checkIfUserExistByUserName(user, true);
+        this.checkIfUserExistByUserEmail(user, true);
 
         return this.userRepository.save(user);
     }
 
+    private void checkIfUserExistByUserName(User user, boolean isRegister) throws ApiException {
+        Optional<User> userExist = this.userRepository.findByUserName(user.getUserName());
+        if (userExist.isPresent() && isRegister) {
+            throw UserError.erroUserAlreadyExist();
+
+        } else if (userExist.isPresent() && !isRegister) {
+            throw UserError.erroDuplicateUserNameEdit();
+        }
+    }
+
+    private void checkIfUserExistByUserEmail(User user, boolean isRegister) throws ApiException {
+        Optional<User> userExist = this.userRepository.findByEmail(user.getEmail());
+        if (userExist.isPresent() && isRegister) {
+            throw UserError.erroUserAlreadyExist();
+        } else if(userExist.isPresent() && !isRegister) {
+            throw UserError.erroDuplicateEmailEdit();
+        }
+    }
+
     @Override
-    public User edit(User user) throws ApiException {
-        return null;
+    public User edit(Long id, UserEditDTO userEditDTO) throws ApiException {
+        User user = this.getById(id);
+
+        if (userEditDTO.getName() != null && !userEditDTO.getName().isBlank()) {
+            user.setName(userEditDTO.getName());
+        }
+        if (userEditDTO.getUserName() != null && !userEditDTO.getUserName().isBlank()) {
+            user.setUserName(userEditDTO.getUserName());
+            this.checkIfUserExistByUserName(user, false);
+        }
+        if (userEditDTO.getEmail() != null & !userEditDTO.getEmail().isBlank()) {
+            user.setEmail(userEditDTO.getEmail());
+            this.checkIfUserExistByUserEmail(user, false);
+        }
+
+        return this.userRepository.save(user);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.dev.scrumboard.controllers;
 
 import com.dev.scrumboard.dtos.UserCreateDTO;
+import com.dev.scrumboard.dtos.UserEditDTO;
 import com.dev.scrumboard.dtos.UserResponseDTO;
 import com.dev.scrumboard.exceptions.ApiException;
 import com.dev.scrumboard.models.User;
@@ -29,6 +30,14 @@ public class UserController {
         UserResponseDTO response = new UserResponseDTO(createdUser);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<?> edit(@PathVariable("id") Long id, @RequestBody UserEditDTO userEditDTO) throws ApiException {
+        User user = this.userService.edit(id, userEditDTO);
+        UserResponseDTO response = new UserResponseDTO(user);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
