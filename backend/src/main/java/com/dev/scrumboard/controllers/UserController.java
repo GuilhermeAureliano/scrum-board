@@ -28,4 +28,12 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> findByID(@PathVariable("id") Long id) throws ApiException {
+        User user = this.userService.getById(id);
+        UserResponseDTO response = new UserResponseDTO(user);
+        
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 }

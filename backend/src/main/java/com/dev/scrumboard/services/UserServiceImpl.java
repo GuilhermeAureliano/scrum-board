@@ -10,11 +10,12 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl {
+public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserRepository userRepository;
 
+    @Override
     public User create(User user) throws ApiException {
 
         Optional<User> userExist = this.userRepository.findByUserName(user.getUserName());
@@ -28,5 +29,21 @@ public class UserServiceImpl {
         }
 
         return this.userRepository.save(user);
+    }
+
+    @Override
+    public User edit(User user) throws ApiException {
+        return null;
+    }
+
+    @Override
+    public User getById(Long id) throws ApiException {
+        Optional<User> userOpt = this.userRepository.findById(id);
+
+        if (userOpt.isEmpty()) {
+            throw UserError.erroUserNotExist();
+        }
+
+        return userOpt.get();
     }
 }
