@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ScrumboardApplication {
+public class ScrumBoardApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ScrumboardApplication.class, args);
+		SpringApplication.run(ScrumBoardApplication.class, args);
 	}
 
 }
