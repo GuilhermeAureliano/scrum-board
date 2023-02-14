@@ -6,9 +6,12 @@ import com.dev.scrumboard.exceptions.ApiException;
 import com.dev.scrumboard.models.User;
 import com.dev.scrumboard.services.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -32,8 +35,24 @@ public class UserController {
     public ResponseEntity<?> findByID(@PathVariable("id") Long id) throws ApiException {
         User user = this.userService.getById(id);
         UserResponseDTO response = new UserResponseDTO(user);
-        
+
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<?> getAll() throws ApiException {
+        List<User> userList = this.userService.getAll();
+        List<UserResponseDTO> responseList = userList.stream().map(UserResponseDTO::new).collect(Collectors.toList());
+
+        return new ResponseEntity<>(responseList, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    public ResponseEntity<?> searchByTerm(@RequestParam String term) throws ApiException {
+        List<User> userList = this.userService.searchByTerm(term);
+        List<UserResponseDTO> responseList = userList.stream().map(UserResponseDTO::new).collect(Collectors.toList());
+
+        return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 
 }

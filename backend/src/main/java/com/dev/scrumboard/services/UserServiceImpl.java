@@ -7,6 +7,8 @@ import com.dev.scrumboard.utils.erros.UserError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -45,5 +47,32 @@ public class UserServiceImpl implements UserService{
         }
 
         return userOpt.get();
+    }
+
+    @Override
+    public List<User> getAll() throws ApiException {
+        return this.userRepository.findAll();
+    }
+
+    @Override
+    public List<User> searchByTerm(String search) throws ApiException {
+        List<User> userList = this.getAll();
+        List<User> matchingUsers = new ArrayList<>();
+
+        String termLowerCase = search.toLowerCase();
+        for (User user : userList) {
+            String nameLowerCase = user.getName().toLowerCase();
+            String userNameLowerCase = user.getUserName().toLowerCase();
+
+            if (nameLowerCase.contains(termLowerCase) || userNameLowerCase.contains(termLowerCase)) {
+                matchingUsers.add(user);
+            }
+        }
+
+        if (matchingUsers.isEmpty()) {
+            throw UserError.erroUserTermNotFound();
+        }
+
+        return matchingUsers;
     }
 }
