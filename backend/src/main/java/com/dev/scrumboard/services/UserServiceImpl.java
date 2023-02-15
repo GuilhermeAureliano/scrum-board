@@ -77,6 +77,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public void delete(Long id) throws ApiException {
+        User user = this.getById(id);
+
+        this.userRepository.delete(user);
+    }
+
+    @Override
     public List<User> getAll() throws ApiException {
         return this.userRepository.findAll();
     }
