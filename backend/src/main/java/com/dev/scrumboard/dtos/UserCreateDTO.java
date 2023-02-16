@@ -19,6 +19,7 @@ public class UserCreateDTO {
                 null,
                 this.name,
                 this.userName,
-                this.email);
+                this.email,
+                null);
     }
 }

@@ -2,6 +2,7 @@ package com.dev.scrumboard.services;
 
 import com.dev.scrumboard.dtos.UserEditDTO;
 import com.dev.scrumboard.exceptions.ApiException;
+import com.dev.scrumboard.models.Project;
 import com.dev.scrumboard.models.User;
 import com.dev.scrumboard.repositories.UserRepository;
 import com.dev.scrumboard.utils.erros.UserError;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -109,4 +111,13 @@ public class UserServiceImpl implements UserService{
 
         return matchingUsers;
     }
+
+    public void addScrumMasterProject(User user, Project project) {
+        Set<Project> currentProjects = user.getScrumMasterProjects();
+        currentProjects.add(project);
+        user.setScrumMasterProjects(currentProjects);
+
+        this.userRepository.save(user);
+    }
+
 }
