@@ -22,11 +22,15 @@ public class UserResponseDTO {
         this.userName = user.getUserName();
         this.email = user.getEmail();
         Set<Project> projects = user.getScrumMasterProjects();
-        List<String> projectNames = new ArrayList<>();
-        for (Project project : projects) {
-            projectNames.add(project.getName());
+        if (projects == null) {
+            this.scrumMasterProjectsNames = new ArrayList<>();;
+        } else {
+            List<String> projectNames = new ArrayList<>();
+            for (Project project : projects) {
+                projectNames.add(project.getName());
+            }
+            this.scrumMasterProjectsNames = projectNames;
         }
 
-        this.scrumMasterProjectsNames = projectNames;
     }
 }

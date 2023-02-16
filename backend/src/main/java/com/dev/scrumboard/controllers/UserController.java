@@ -23,8 +23,7 @@ public class UserController {
     private UserServiceImpl userService;
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ResponseEntity<?> create(@RequestParam String name, @RequestParam String userName, @RequestParam String email) throws ApiException {
-        UserCreateDTO userDTO = new UserCreateDTO(name, userName, email);
+    public ResponseEntity<?> create(@RequestBody UserCreateDTO userDTO) throws ApiException {
 
         User createdUser = this.userService.create(userDTO.getModel());
         UserResponseDTO response = new UserResponseDTO(createdUser);
