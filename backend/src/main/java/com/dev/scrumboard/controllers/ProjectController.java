@@ -1,6 +1,7 @@
 package com.dev.scrumboard.controllers;
 
 import com.dev.scrumboard.dtos.ProjectCreateDTO;
+import com.dev.scrumboard.dtos.ProjectEditDTO;
 import com.dev.scrumboard.dtos.ProjectResponseDTO;
 import com.dev.scrumboard.exceptions.ApiException;
 import com.dev.scrumboard.models.Project;
@@ -38,5 +39,21 @@ public class ProjectController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<?> edit(@PathVariable("id") Long id, @RequestBody ProjectEditDTO projectEditDTO) throws ApiException {
+        Project project = this.projectService.edit(id, projectEditDTO);
+
+        ProjectResponseDTO response = new ProjectResponseDTO(project);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> findByID(@PathVariable("id") Long id) throws ApiException {
+        Project project = this.projectService.getById(id);
+        ProjectResponseDTO response = new ProjectResponseDTO(project);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
 }
