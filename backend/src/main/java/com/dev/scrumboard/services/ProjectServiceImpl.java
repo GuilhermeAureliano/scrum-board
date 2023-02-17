@@ -1,6 +1,7 @@
 package com.dev.scrumboard.services;
 
 import com.dev.scrumboard.dtos.ProjectEditDTO;
+import com.dev.scrumboard.dtos.ProjectResponseDTO;
 import com.dev.scrumboard.exceptions.ApiException;
 import com.dev.scrumboard.models.Project;
 import com.dev.scrumboard.repositories.ProjectRepository;
@@ -18,7 +19,19 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     public Project create(Project project) throws ApiException {
+
+        this.checkIfProjectExistByName(project);
+
         return this.projectRepository.save(project);
+    }
+
+    private void checkIfProjectExistByName(Project project) throws ApiException {
+        Optional<Project> projectOpt = this.projectRepository.findByName(project.getName());
+
+        if (projectOpt.isPresent()) {
+            throw ProjectError.erroProjectAlreadyExist(project.getName());
+        }
+
     }
 
     @Override
