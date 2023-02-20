@@ -12,4 +12,6 @@ public interface ProjectService {
     Project edit(Long id, ProjectEditDTO projectEditDTO) throws ApiException;
 
     Project getById(Long id) throws ApiException;
+
+    void delete(Long id) throws ApiException;
 }

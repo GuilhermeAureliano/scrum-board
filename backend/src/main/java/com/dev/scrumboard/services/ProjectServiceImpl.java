@@ -55,4 +55,11 @@ public class ProjectServiceImpl implements ProjectService{
 
         return projectOpt.get();
     }
+
+    @Override
+    public void delete(Long id) throws ApiException {
+        Project project = this.getById(id);
+
+        this.projectRepository.delete(project);
+    }
 }
