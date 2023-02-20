@@ -5,6 +5,8 @@ import com.dev.scrumboard.exceptions.ApiException;
 import com.dev.scrumboard.models.Project;
 import io.swagger.annotations.Api;
 
+import java.util.List;
+
 public interface ProjectService {
 
     Project create(Project project) throws ApiException;
@@ -14,4 +16,7 @@ public interface ProjectService {
     Project getById(Long id) throws ApiException;
 
     void delete(Long id) throws ApiException;
+
+    List<Project> getAll() throws ApiException;
+
 }

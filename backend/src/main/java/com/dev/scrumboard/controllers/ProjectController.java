@@ -15,6 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping(value = "/projects")
 @CrossOrigin
@@ -61,6 +64,14 @@ public class ProjectController {
         this.projectService.delete(id);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<?> getAll() throws ApiException {
+        List<Project> projectList = this.projectService.getAll();
+        List<ProjectResponseDTO> responseList = projectList.stream().map(ProjectResponseDTO::new).collect(Collectors.toList());
+
+        return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 
 }

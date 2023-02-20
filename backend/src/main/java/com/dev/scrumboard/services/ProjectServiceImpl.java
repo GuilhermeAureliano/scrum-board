@@ -8,6 +8,7 @@ import com.dev.scrumboard.utils.erros.ProjectError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -69,5 +70,10 @@ public class ProjectServiceImpl implements ProjectService{
         Project project = this.getById(id);
 
         this.projectRepository.delete(project);
+    }
+
+    @Override
+    public List<Project> getAll() throws ApiException {
+        return this.projectRepository.findAll();
     }
 }
