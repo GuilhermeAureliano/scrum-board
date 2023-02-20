@@ -1,7 +1,6 @@
 package com.dev.scrumboard.services;
 
 import com.dev.scrumboard.dtos.ProjectEditDTO;
-import com.dev.scrumboard.dtos.ProjectResponseDTO;
 import com.dev.scrumboard.exceptions.ApiException;
 import com.dev.scrumboard.models.Project;
 import com.dev.scrumboard.repositories.ProjectRepository;
@@ -20,16 +19,18 @@ public class ProjectServiceImpl implements ProjectService{
     @Override
     public Project create(Project project) throws ApiException {
 
-        this.checkIfProjectExistByName(project);
+        this.checkIfProjectExistByName(project, true);
 
         return this.projectRepository.save(project);
     }
 
-    private void checkIfProjectExistByName(Project project) throws ApiException {
+    private void checkIfProjectExistByName(Project project, boolean isRegister) throws ApiException {
         Optional<Project> projectOpt = this.projectRepository.findByName(project.getName());
 
-        if (projectOpt.isPresent()) {
+        if (projectOpt.isPresent() && isRegister) {
             throw ProjectError.erroProjectAlreadyExist(project.getName());
+        } else if (projectOpt.isPresent() && !isRegister) {
+            throw ProjectError.erroDuplicateProjectNameEdit();
         }
 
     }
@@ -38,9 +39,16 @@ public class ProjectServiceImpl implements ProjectService{
     public Project edit(Long id, ProjectEditDTO projectEditDTO) throws ApiException {
         Project project = this.getById(id);
 
-        project.setName(projectEditDTO.getName());
-        project.setDescription(projectEditDTO.getDescription());
-        project.setPartnerInstitution(projectEditDTO.getPartnerInstitution());
+        if (projectEditDTO.getName() != null && !projectEditDTO.getName().isBlank()) {
+            project.setName(projectEditDTO.getName());
+            this.checkIfProjectExistByName(project, false);
+        }
+        if (projectEditDTO.getDescription() != null && !projectEditDTO.getDescription().isBlank()) {
+            project.setDescription(projectEditDTO.getDescription());
+        }
+        if (projectEditDTO.getPartnerInstitution() != null && !projectEditDTO.getPartnerInstitution().isBlank()) {
+            project.setPartnerInstitution(projectEditDTO.getPartnerInstitution());
+        }
 
         return this.projectRepository.save(project);
     }
