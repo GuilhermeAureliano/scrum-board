@@ -1,16 +1,15 @@
 package com.dev.scrumboard.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude={"scrumMasterProjects"})
 @Entity
 @Table(name = "TB_USER")
 public class User {
@@ -27,5 +26,8 @@ public class User {
 
     @Column(name = "EMAIL", nullable = false)
     private String email;
+
+    @OneToMany(mappedBy = "responsibleScrumMaster", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Project> scrumMasterProjects;
 
 }
