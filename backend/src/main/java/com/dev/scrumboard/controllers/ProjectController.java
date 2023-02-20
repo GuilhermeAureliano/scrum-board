@@ -74,4 +74,12 @@ public class ProjectController {
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    public ResponseEntity<?> searchByName(@RequestParam String name) throws ApiException {
+        List<Project> projectList = this.projectService.searchByNome(name);
+        List<ProjectResponseDTO> responseList = projectList.stream().map(ProjectResponseDTO::new).collect(Collectors.toList());
+
+        return new ResponseEntity<>(responseList, HttpStatus.OK);
+    }
+
 }

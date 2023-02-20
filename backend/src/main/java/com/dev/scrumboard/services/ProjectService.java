@@ -19,4 +19,5 @@ public interface ProjectService {
 
     List<Project> getAll() throws ApiException;
 
+    List<Project> searchByNome(String name) throws ApiException;
 }
